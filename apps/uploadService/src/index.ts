@@ -2,13 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import simpleGit from 'simple-git';
 import { createId } from '../utils/cuid';
-import { getAllFiles } from '../utils/files';
+import { uploadFolderToS3 } from '../utils/uploadS3';
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-getAllFiles("kcst1")
 
 
 app.post("/deploy", async (req, res) => {
@@ -17,8 +16,7 @@ app.post("/deploy", async (req, res) => {
     const id = createId();
     if (!id) res.json("Internal Error")
     await simpleGit().clone(repoUrl, `./output/${id}`)
-    console.log(id);
-    getAllFiles(id)
+    await uploadFolderToS3(id);
     res.json(id);
 })
 

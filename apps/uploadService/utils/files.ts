@@ -1,11 +1,24 @@
-import { readdir } from "node:fs/promises";
+import { readdir, stat } from "node:fs/promises";
 import path from "node:path";
 
-export const getAllFiles = async (folderId: string) => {
-    let response: string[] = [];
-    const outputPath = path.resolve(import.meta.dir, `../output/${folderId}`)
-    const files = await readdir(outputPath, { recursive: true });
-    const fulll = files.map(file => path.join(outputPath, file));
-    console.log(fulll);
+const IGNORE = ["node_modules", ".git", ".next", "dist", "build"];
 
+export async function getAllFiles(id: string) {
+    const base = path.resolve(import.meta.dir, `../output/${id}`);
+    const items = await readdir(base, { recursive: true });
+
+    const files: { key: string; fullPath: string }[] = [];
+
+    for (const item of items) {
+        if (IGNORE.some(f => item.includes(f))) continue;
+
+        const fullPath = path.join(base, item);
+        const fileStat = await stat(fullPath);
+
+        if (!fileStat.isDirectory()) {
+            files.push({ key: item, fullPath });
+        }
+    }
+
+    return files;
 }
