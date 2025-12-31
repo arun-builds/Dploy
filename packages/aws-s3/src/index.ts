@@ -70,3 +70,25 @@ function streamToFile(stream: Readable, filePath: string): Promise<void> {
         write.on("error", reject);
     });
 }
+
+
+export async function getFileFromDeployment(id: string, filePath: string, bucket = "deployments") {
+    const key = `dist/${id}/${filePath}`;
+
+    try {
+        const obj = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+        return obj.Body as Readable;
+    } catch (err) {
+        return null;
+    }
+}
+
+export function detectContentType(path: string) {
+    if (path.endsWith(".html")) return "text/html";
+    if (path.endsWith(".css")) return "text/css";
+    if (path.endsWith(".js")) return "application/javascript";
+    if (path.endsWith(".json")) return "application/json";
+    if (path.endsWith(".png")) return "image/png";
+    if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
+    return "application/octet-stream";
+}

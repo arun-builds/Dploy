@@ -9,11 +9,11 @@ while (1) {
     console.log(res);
     if (!res) continue;
     const id = res.element
-    console.log("before");
     await downloadS3Folder("deployments", `output/${id}/`, `./output/${id}`);
-    console.log("after");
 
+    // TODO: containerize this build process
     await buildProject(id);
+
     await uploadDistToS3(id);
     console.log("end of deployment")
 
