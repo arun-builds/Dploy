@@ -8,7 +8,7 @@ export async function uploadFolderToS3(id: string, bucket = "deployments") {
 
     for (const { key, fullPath } of files) {
         const body = await fs.readFile(fullPath);
-        uplaodFIles(bucket, id, key, body)
+        await uplaodFIles(bucket, `output/${id}/${key}`, body)
     }
 
     console.log("s3 upload complete")
