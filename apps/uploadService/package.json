@@ -13,6 +13,7 @@
     "@paralleldrive/cuid2": "^3.0.4",
     "@repo/aws-s3": "*",
     "@repo/redis": "*",
+    "@repo/database": "*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/mime-types": "^3.0.1",
